@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orar – tabel + timp liber</title>
+  <style>
+    :root{
+      --bg:#070b16;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+
+      --curs: rgba(139,92,246,.22);
+      --lab: rgba(34,197,94,.20);
+      --sem: rgba(6,182,212,.20);
+      --fac: rgba(245,158,11,.18);
+
+      --free: rgba(255,255,255,.04);
+      --conflict: rgba(239,68,68,.20);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 10% -10%, rgba(139,92,246,.28), transparent 60%),
+        radial-gradient(900px 650px at 90% 0%, rgba(6,182,212,.20), transparent 55%),
+        radial-gradient(900px 600px at 50% 110%, rgba(34,197,94,.14), transparent 60%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .wrap{max-width: 1150px; margin: 0 auto; padding: 22px 14px 40px;}
+    header{
+      display:flex; flex-wrap:wrap; gap:12px;
+      align-items:flex-end; justify-content:space-between;
+      margin-bottom: 14px;
+    }
+    h1{margin:0; font-size: clamp(18px, 2.7vw, 26px); letter-spacing:.2px}
+    .sub{color:var(--muted); font-size: 13px; margin-top:6px}
+
+    .legend{
+      display:flex; flex-wrap:wrap; gap:8px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+      padding: 10px 12px;
+      backdrop-filter: blur(10px);
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size:12px; color:var(--muted);
+      white-space:nowrap;
+    }
+    .dot{width:10px; height:10px; border-radius:999px; display:inline-block}
+    .dot.curs{background: rgba(139,92,246,1)}
+    .dot.lab{background: rgba(34,197,94,1)}
+    .dot.sem{background: rgba(6,182,212,1)}
+    .dot.fac{background: rgba(245,158,11,1)}
+    .dot.free{background: rgba(255,255,255,.45)}
+    .dot.conf{background: rgba(239,68,68,1)}
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap:10px;
+      margin: 14px 0 14px;
+    }
+    @media (max-width: 980px){ .cards{grid-template-columns: repeat(2, minmax(0, 1fr));} }
+    @media (max-width: 520px){ .cards{grid-template-columns: 1fr;} }
+
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 12px 12px 10px;
+      overflow:hidden;
+    }
+    .card h3{margin:0; font-size:14px; letter-spacing:.2px}
+    .metric{margin-top:8px; display:flex; align-items:baseline; gap:10px}
+    .hours{font-size: 22px; font-weight: 800}
+    .note{font-size: 12px; color: var(--muted)}
+
+    .tableWrap{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 880px; /* for horizontal scroll on phone */
+    }
+    thead th{
+      position: sticky;
+      top: 0;
+      background: rgba(10, 14, 30, .92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 12px 10px;
+      font-size: 13px;
+      text-align: left;
+      z-index: 2;
+    }
+    tbody th.time{
+      width: 120px;
+      background: rgba(255,255,255,.02);
+      color: rgba(255,255,255,.78);
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      padding: 10px;
+      border-right: 1px solid rgba(255,255,255,.10);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      vertical-align: top;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+    td{
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      border-right: 1px solid rgba(255,255,255,.08);
+      vertical-align: top;
+      background: rgba(255,255,255,.02);
+    }
+    td:last-child, thead th:last-child{border-right:0}
+
+    .cell{
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 10px 10px 9px;
+      background: var(--panel2);
+    }
+    .cell .title{font-weight: 800; font-size: 13px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .cell .meta{display:flex; flex-wrap:wrap; gap:7px; font-size: 12px; color: var(--muted)}
+    .tag{
+      display:inline-flex; align-items:center; gap:6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      white-space: nowrap;
+    }
+
+    .curs{background: var(--curs)}
+    .lab{background: var(--lab)}
+    .sem{background: var(--sem)}
+    .fac{background: var(--fac)}
+    .free{background: var(--free)}
+    .conflict{background: var(--conflict); border-color: rgba(239,68,68,.55)}
+
+    .scrollHint{
+      margin-top:10px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    /* Mobile-friendly horizontal scroll */
+    .hscroll{overflow:auto; -webkit-overflow-scrolling: touch;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📅 Orar (tabel) + timp liber pentru lucru</h1>
+        <div class="sub">Interval analizat: <strong>08:00–20:00</strong> (pe ore). Celulele goale sunt timp liber ✅</div>
+      </div>
+
+      <div class="legend">
+        <span class="pill"><span class="dot curs"></span> Curs</span>
+        <span class="pill"><span class="dot lab"></span> Laborator</span>
+        <span class="pill"><span class="dot sem"></span> Seminar</span>
+        <span class="pill"><span class="dot fac"></span> Facultativ</span>
+        <span class="pill"><span class="dot free"></span> Liber</span>
+        <span class="pill"><span class="dot conf"></span> Conflict</span>
+      </div>
+    </header>
+
+    <!-- Summary cards -->
+    <section class="cards" aria-label="Sumar timp liber">
+      <div class="card">
+        <h3>🟣 Luni</h3>
+        <div class="metric"><div class="hours">8h</div><div class="note">liber (din 12h)</div></div>
+        <div class="note">Ore ocupate: 08–10, 15–17</div>
+      </div>
+      <div class="card">
+        <h3>🟪 Marți</h3>
+        <div class="metric"><div class="hours">6h</div><div class="note">liber (din 12h)</div></div>
+        <div class="note">Ore ocupate: 10–12, 14–18</div>
+      </div>
+      <div class="card">
+        <h3>🟦 Miercuri</h3>
+        <div class="metric"><div class="hours">10h</div><div class="note">liber (din 12h)</div></div>
+        <div class="note">Ore ocupate: 08–10</div>
+      </div>
+      <div class="card">
+        <h3>🟩 Joi</h3>
+        <div class="metric"><div class="hours">2h</div><div class="note">liber (din 12h)</div></div>
+        <div class="note">Ore ocupate: 08–10, 12–20</div>
+      </div>
+      <div class="card">
+        <h3>🟧 Vineri</h3>
+        <div class="metric"><div class="hours">8h</div><div class="note">liber (din 12h)</div></div>
+        <div class="note">Ore ocupate: 12–16 (conflict 13–14)</div>
+      </div>
+    </section>
+
+    <!-- Timetable -->
+    <section class="tableWrap">
+      <div class="hscroll">
+        <table aria-label="Orar pe ore">
+          <thead>
+            <tr>
+              <th>Ora</th>
+              <th>Luni</th>
+              <th>Marți</th>
+              <th>Miercuri</th>
+              <th>Joi</th>
+              <th>Vineri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 08-09 -->
+            <tr>
+              <th class="time">08:00–09:00</th>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Academic Ethics and Integrity</div>
+                  <div class="meta">
+                    <span class="tag">Curs</span><span class="tag">304CP</span>
+                  </div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Computer Security</div>
+                  <div class="meta">
+                    <span class="tag">Curs</span><span class="tag">A115</span>
+                  </div>
+                </div>
+              </td>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Embedded Systems</div>
+                  <div class="meta">
+                    <span class="tag">Curs</span><span class="tag">A115</span>
+                  </div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+            <!-- 09-10 -->
+            <tr>
+              <th class="time">09:00–10:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+
+            <!-- 10-11 -->
+            <tr>
+              <th class="time">10:00–11:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Compilation Techniques</div>
+                  <div class="meta"><span class="tag">Curs</span><span class="tag">304CP</span></div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+            <!-- 11-12 -->
+            <tr>
+              <th class="time">11:00–12:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+
+            <!-- 12-13 -->
+            <tr>
+              <th class="time">12:00–13:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell lab">
+                  <div class="title">Compilation Techniques</div>
+                  <div class="meta"><span class="tag">Laborator</span><span class="tag">B528b</span></div>
+                </div>
+              </td>
+              <td rowspan="2">
+                <div class="cell lab">
+                  <div class="title">Computer Security</div>
+                  <div class="meta"><span class="tag">Laborator</span><span class="tag">A302</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 13-14 -->
+            <tr>
+              <th class="time">13:00–14:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+
+              <!-- Friday conflict overlay note -->
+              <!-- (the CS lab cell already spans; we add a visual conflict marker in the time column below in 13-14 row) -->
+            </tr>
+
+            <!-- 14-15 -->
+            <tr>
+              <th class="time">14:00–15:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Introduction to IoT and Cloud Architectures</div>
+                  <div class="meta"><span class="tag">Curs</span><span class="tag">A115</span></div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell lab">
+                  <div class="title">Introduction to IoT and Cloud Architectures</div>
+                  <div class="meta"><span class="tag">Laborator</span><span class="tag">B419</span></div>
+                </div>
+              </td>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Microeconomics</div>
+                  <div class="meta"><span class="tag">Curs</span><span class="tag">A117</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 15-16 -->
+            <tr>
+              <th class="time">15:00–16:00</th>
+              <td rowspan="2">
+                <div class="cell curs">
+                  <div class="title">Computer Graphics</div>
+                  <div class="meta"><span class="tag">Curs</span><span class="tag">A109</span></div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+
+            <!-- 16-17 -->
+            <tr>
+              <th class="time">16:00–17:00</th>
+              <td rowspan="2">
+                <div class="cell lab">
+                  <div class="title">Embedded Systems</div>
+                  <div class="meta"><span class="tag">Laborator</span><span class="tag">B413</span></div>
+                </div>
+              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell lab">
+                  <div class="title">Computer Graphics</div>
+                  <div class="meta"><span class="tag">Laborator</span><span class="tag">P17 (ASPC)</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="cell free">
+                  <div class="title">Liber</div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 17-18 -->
+            <tr>
+              <th class="time">17:00–18:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+
+            <!-- 18-19 -->
+            <tr>
+              <th class="time">18:00–19:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td rowspan="2">
+                <div class="cell fac">
+                  <div class="title">Managementul claselor de elevi</div>
+                  <div class="meta"><span class="tag">Curs facultativ</span><span class="tag">ASPC</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="cell conflict">
+                  <div class="title">Conflict 13:00–14:00</div>
+                  <div class="meta">
+                    <span class="tag">CS Lab (A302)</span>
+                    <span class="tag">Micro Seminar (SPM205)</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 19-20 -->
+            <tr>
+              <th class="time">19:00–20:00</th>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
+            </tr>
+
+            <!-- Extra: mark Friday 13-14 seminar (as informational) -->
+            <tr style="display:none"></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="scrollHint">📱 Pe telefon: scroll orizontal ca să vezi tot tabelul.</div>
+  </div>
+
+  <!-- NOTE:
+       - În tabel am pus “Conflict 13:00–14:00” ca să fie evident.
+       - Dacă vrei, pot să-l fac să calculeze automat orele libere dintr-un JSON (și să editezi ușor orarul).
+  -->
+</body>
+</html>

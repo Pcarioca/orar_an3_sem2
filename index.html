@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ro">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orar Facultate (Luni-Vineri)</title>
+
+  <style>
+    :root {
+      /* Dark by default */
+      --bg: #0b1020;
+      --card: rgba(255, 255, 255, 0.06);
+      --card2: rgba(255, 255, 255, 0.04);
+      --text: rgba(255, 255, 255, 0.92);
+      --muted: rgba(255, 255, 255, 0.68);
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      --radius: 18px;
+
+      --accent: #8b5cf6;
+      /* violet */
+      --accent2: #22c55e;
+      /* green */
+      --accent3: #06b6d4;
+      /* cyan */
+      --accent4: #f59e0b;
+      /* amber */
+      --accent5: #ef4444;
+      /* red */
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(139, 92, 246, 0.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(6, 182, 212, 0.25), transparent 55%),
+        radial-gradient(900px 600px at 50% 110%, rgba(34, 197, 94, 0.18), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      background-repeat: round;
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      /* „cover” extinde imaginea pentru a umple tot spațiul fără să o deformeze */
+      background-size: cover;
+
+      /* Opțional: fixarea fundalului pentru un efect de paralaxă */
+      background-attachment: fixed;
+      line-height: 1.45;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      display: grid;
+      gap: 6px;
+    }
+
+    h1 {
+      font-size: clamp(20px, 3vw, 28px);
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.03);
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
+
+    .dot.lab {
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+
+    .dot.seminar {
+      background: var(--accent3);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+    }
+
+    .dot.facultativ {
+      background: var(--accent4);
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.14);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 880px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .legend {
+        border-radius: 16px;
+      }
+    }
+
+    .day {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .day-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .day-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .badge {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.78);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .items {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(0, 0, 0, 0.12);
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 0, 0, 0.18);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .time {
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.76);
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      height: fit-content;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .info {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .course {
+      font-weight: 700;
+      letter-spacing: 0.15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.03);
+      white-space: nowrap;
+    }
+
+    .tag strong {
+      color: rgba(255, 255, 255, 0.82);
+      font-weight: 650;
+    }
+
+    /* Type accent */
+    .type {
+      border-color: rgba(139, 92, 246, 0.35);
+      background: rgba(139, 92, 246, 0.12);
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .type.lab {
+      border-color: rgba(34, 197, 94, 0.35);
+      background: rgba(34, 197, 94, 0.12);
+    }
+
+    .type.seminar {
+      border-color: rgba(6, 182, 212, 0.35);
+      background: rgba(6, 182, 212, 0.12);
+    }
+
+    .type.facultativ {
+      border-color: rgba(245, 158, 11, 0.38);
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    .footer {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>📚 Orar Andrei Munteanu</h1>
+        <!-- <div class="subtitle">Dark mode implicit. Optimizat pentru laptop și telefon ✅</div> -->
+      </div>
+
+      <div class="legend" aria-label="Legendă tip activitate">
+        <span class="pill"><span class="dot"></span> Curs</span>
+        <span class="pill"><span class="dot lab"></span> Laborator</span>
+        <span class="pill"><span class="dot seminar"></span> Seminar</span>
+        <span class="pill"><span class="dot facultativ"></span> Facultativ</span>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- LUNI -->
+      <section class="day">
+        <div class="day-head">
+          <div class="day-name">🗓️ Luni</div>
+          <div class="badge">2 activități</div>
+        </div>
+        <div class="items">
+          <article class="item">
+            <div class="time">08:00<br />10:00</div>
+            <div class="info">
+              <div class="course">Academic Ethics and Integrity</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> 304CP</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">15:00<br />17:00</div>
+            <div class="info">
+              <div class="course">Computer Graphics</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> A109</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- MARȚI -->
+      <section class="day">
+        <div class="day-head">
+          <div class="day-name">🗓️ Marți</div>
+          <div class="badge">3 activități</div>
+        </div>
+        <div class="items">
+          <article class="item">
+            <div class="time">10:00<br />12:00</div>
+            <div class="info">
+              <div class="course">Compilation Techniques</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> 304CP</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">14:00<br />16:00</div>
+            <div class="info">
+              <div class="course">Introduction to IoT and Cloud Architectures</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> A115</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">16:00<br />18:00</div>
+            <div class="info">
+              <div class="course">Embedded Systems</div>
+              <div class="meta">
+                <span class="tag type lab">Laborator</span>
+                <span class="tag"><strong>Sala:</strong> B413</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- MIERCURI -->
+      <section class="day">
+        <div class="day-head">
+          <div class="day-name">🗓️ Miercuri</div>
+          <div class="badge">1 activitate</div>
+        </div>
+        <div class="items">
+          <article class="item">
+            <div class="time">08:00<br />10:00</div>
+            <div class="info">
+              <div class="course">Computer Security</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> A115</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- JOI -->
+      <section class="day">
+        <div class="day-head">
+          <div class="day-name">🗓️ Joi</div>
+          <div class="badge">5 activități</div>
+        </div>
+        <div class="items">
+          <article class="item">
+            <div class="time">08:00<br />10:00</div>
+            <div class="info">
+              <div class="course">Embedded Systems</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> A115</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">12:00<br />14:00</div>
+            <div class="info">
+              <div class="course">Compilation Techniques</div>
+              <div class="meta">
+                <span class="tag type lab">Laborator</span>
+                <span class="tag"><strong>Sala:</strong> B528b</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">14:00<br />16:00</div>
+            <div class="info">
+              <div class="course">Introduction to IoT and Cloud Architectures</div>
+              <div class="meta">
+                <span class="tag type lab">Laborator</span>
+                <span class="tag"><strong>Sala:</strong> B419</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">16:00<br />18:00</div>
+            <div class="info">
+              <div class="course">Computer Graphics</div>
+              <div class="meta">
+                <span class="tag type lab">Laborator</span>
+                <span class="tag"><strong>Sala:</strong> P17 (ASPC)</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">18:00<br />20:00</div>
+            <div class="info">
+              <div class="course">Managementul claselor de elevi</div>
+              <div class="meta">
+                <span class="tag type facultativ">Curs facultativ</span>
+                <span class="tag"><strong>Sala:</strong> ASPC</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VINERI -->
+      <section class="day">
+        <div class="day-head">
+          <div class="day-name">🗓️ Vineri</div>
+          <div class="badge">3 activități</div>
+        </div>
+        <div class="items">
+          <article class="item">
+            <div class="time">12:00<br />14:00</div>
+            <div class="info">
+              <div class="course">Computer Security</div>
+              <div class="meta">
+                <span class="tag type lab">Laborator</span>
+                <span class="tag"><strong>Sala:</strong> A302</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">13:00<br />14:00</div>
+            <div class="info">
+              <div class="course">Microeconomics</div>
+              <div class="meta">
+                <span class="tag type seminar">Seminar</span>
+                <span class="tag"><strong>Sala:</strong> SPM205</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="item">
+            <div class="time">14:00<br />16:00</div>
+            <div class="info">
+              <div class="course">Microeconomics</div>
+              <div class="meta">
+                <span class="tag type">Curs</span>
+                <span class="tag"><strong>Sala:</strong> A117</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- <div class="footer">✨ Tip: poți salva fișierul ca <strong>orar.html</strong> și îl deschizi direct în browser.</div> -->
+  </div>
+</body>
+
+</html>

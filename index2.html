@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orar – tabel + timp liber</title>
+  <title>Orar – tabel</title>
   <style>
     :root{
       --bg:#070b16;
@@ -177,8 +177,7 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>📅 Orar (tabel) + timp liber pentru lucru</h1>
-        <div class="sub">Interval analizat: <strong>08:00–20:00</strong> (pe ore). Celulele goale sunt timp liber ✅</div>
+        <h1>📅 Orar (tabel)</h1>
       </div>
 
       <div class="legend">
@@ -189,35 +188,6 @@
         <span class="pill"><span class="dot free"></span> Liber</span>
               </div>
     </header>
-
-    <!-- Summary cards -->
-    <section class="cards" aria-label="Sumar timp liber">
-      <div class="card">
-        <h3>🟣 Luni</h3>
-        <div class="metric"><div class="hours">7h</div><div class="note">liber (din 12h)</div></div>
-        <div class="note">Ore ocupate: 08–10, 15–18</div>
-      </div>
-      <div class="card">
-        <h3>🟪 Marți</h3>
-        <div class="metric"><div class="hours">4h</div><div class="note">liber (din 12h)</div></div>
-        <div class="note">Ore ocupate: 10–12, 14–20</div>
-      </div>
-      <div class="card">
-        <h3>🟦 Miercuri</h3>
-        <div class="metric"><div class="hours">10h</div><div class="note">liber (din 12h)</div></div>
-        <div class="note">Ore ocupate: 08–10</div>
-      </div>
-      <div class="card">
-        <h3>🟩 Joi</h3>
-        <div class="metric"><div class="hours">2h</div><div class="note">liber (din 12h)</div></div>
-        <div class="note">Ore ocupate: 08–10, 12–20</div>
-      </div>
-      <div class="card">
-        <h3>🟧 Vineri</h3>
-        <div class="metric"><div class="hours">7h</div><div class="note">liber (din 12h)</div></div>
-        <div class="note">Ore ocupate: 12–16, 17–18</div>
-      </div>
-    </section>
 
     <!-- Timetable -->
     <section class="tableWrap">
@@ -291,7 +261,7 @@
               <td><div class="cell free"><div class="title">Liber</div></div></td>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
-              <td><div class="cell free"><div class="title">Liber</div></div></td>
+              <td><div class="cell curs"><div class="title">Microeconomics</div><div class="meta"><span class="tag">Curs</span></div></div></td>
             </tr>
 
             <!-- 12-13 -->
@@ -306,7 +276,7 @@
                   <div class="meta"><span class="tag">Laborator</span><span class="tag">B528b</span></div>
                 </div>
               </td>
-              <td>
+              <td rowspan="2">
                 <div class="cell lab">
                   <div class="title">Computer Security</div>
                   <div class="meta"><span class="tag">Laborator</span><span class="tag">A302</span></div>
@@ -320,13 +290,6 @@
               <td><div class="cell free"><div class="title">Liber</div></div></td>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
-
-              <td>
-                <div class="cell sem">
-                  <div class="title">Microeconomics</div>
-                  <div class="meta"><span class="tag">Seminar</span><span class="tag">SPM205</span></div>
-                </div>
-              </td>
             </tr>
 
             <!-- 14-15 -->
@@ -346,12 +309,7 @@
                   <div class="meta"><span class="tag">Laborator</span><span class="tag">B419</span></div>
                 </div>
               </td>
-              <td rowspan="2">
-                <div class="cell curs">
-                  <div class="title">Microeconomics</div>
-                  <div class="meta"><span class="tag">Curs</span><span class="tag">A117</span></div>
-                </div>
-              </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
             </tr>
 
             <!-- 15-16 -->
@@ -363,6 +321,7 @@
                   <div class="meta"><span class="tag">Curs</span><span class="tag">A109</span></div>
                 </div>
               </td>
+              <td><div class="cell free"><div class="title">Liber</div></div></td>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
             </tr>
 
@@ -382,9 +341,10 @@
                   <div class="meta"><span class="tag">Laborator</span><span class="tag">P17 (ASPC)</span></div>
                 </div>
               </td>
-              <td>
-                <div class="cell free">
-                  <div class="title">Liber</div>
+              <td rowspan="2">
+                <div class="cell sem">
+                  <div class="title">Academic Ethics and Integrity</div>
+                  <div class="meta"><span class="tag">Seminar</span><span class="tag">Săptămâni pare</span></div>
                 </div>
               </td>
             </tr>
@@ -393,13 +353,6 @@
             <tr>
               <th class="time">17:00–18:00</th>
               <td><div class="cell free"><div class="title">Liber</div></div></td>
-              <td><div class="cell free"><div class="title">Liber</div></div></td>
-              <td>
-                <div class="cell sem">
-                  <div class="title">Academic Ethics and Integrity</div>
-                  <div class="meta"><span class="tag">Seminar</span><span class="tag">304CP</span></div>
-                </div>
-              </td>
             </tr>
 
             <!-- 18-19 -->
